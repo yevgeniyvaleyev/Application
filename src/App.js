@@ -30,13 +30,13 @@ class App extends Component {
           {/* Filters  */}
           <div className="row">
             <div className="col-4 offset-2 dropdown">
-              <select class="form-control form-control-sm">
+              <select className="form-control form-control-sm">
                 <option>Option 01</option>
                 <option>Option 02</option>
               </select>
             </div>
             <div className="col-4 dropdown">
-              <select class="form-control form-control-sm">
+              <select className="form-control form-control-sm">
                 <option>Option 01</option>
                 <option>Option 02</option>
                 <option>Option 03</option>
@@ -48,7 +48,7 @@ class App extends Component {
           <div className="row">
             <div className="col-8 offset-2 text-center default-padding">
               {/* One Pill  */}
-              <span class="badge badge-pill badge-secondary small-padding-wide">
+              <span className="badge badge-pill badge-secondary small-padding-wide">
                 <span className="text">Option 01</span>
                 <span className="icon-margin-left cursor-pointer">&times;</span>
               </span>
@@ -59,10 +59,10 @@ class App extends Component {
 
         <main className="main default-padding">
           <div className="container">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map(() => {
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((item, index) => {
               return (
-                <div className="article">
-                  <h4>Article Title</h4>
+                <div className="article" key={index}>
+                  <h4>Article Title (#{item})</h4>
                   <p>Article Description</p>
                 </div>
               );

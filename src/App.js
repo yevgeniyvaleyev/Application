@@ -57,8 +57,10 @@ class App extends Component {
           </div>
         </header>
 
+        {/* Main / Searchresults  */}
         <main className="main default-padding">
           <div className="container">
+            {/* Map over articles  */}
             {[1, 2, 3, 4, 5, 6, 7, 8].map((item, index) => {
               return (
                 <div className="article" key={index}>
@@ -67,6 +69,7 @@ class App extends Component {
                 </div>
               );
             })}
+            {/* Map over articles  */}
           </div>
         </main>
       </div>

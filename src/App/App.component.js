@@ -16,8 +16,8 @@ class App extends Component {
       );
     }
     return (
-      <div className="App default-padding">
-        <header className="container">
+      <div className="App">
+        <header className="container default-padding">
           {/* Title & Searchbox  */}
           <div className="row">
             <div className="col-8 offset-2 text-center">

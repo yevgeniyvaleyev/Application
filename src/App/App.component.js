@@ -1,8 +1,20 @@
 import React, { Component } from 'react';
-import './App.css';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as Actions from './App.actions'; //Import your actions
+import './App.style.css';
 
 class App extends Component {
+  componentDidMount() {
+    this.props.getData();
+  }
+
   render() {
+    if (this.props.loading) {
+      return (
+        <div className="container text-center default-padding">Loading...</div>
+      );
+    }
     return (
       <div className="App default-padding">
         <header className="container">
@@ -61,7 +73,7 @@ class App extends Component {
         <main className="main default-padding">
           <div className="container">
             {/* Map over articles  */}
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((item, index) => {
+            {this.props.data.map((item, index) => {
               return (
                 <div className="article" key={index}>
                   <h4>Article Title (#{item})</h4>
@@ -77,4 +89,13 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = state => ({
+  loading: state.AppReducer.loading,
+  data: state.AppReducer.data
+});
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(Actions, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

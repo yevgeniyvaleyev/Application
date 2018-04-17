@@ -5,16 +5,28 @@ import * as Actions from './App.actions'; //Import your actions
 import './App.style.css';
 
 class App extends Component {
+  constructor(props){
+    super(props);
+
+    this.filterName = this.filterName.bind(this);
+    this.filterNat = this.filterNat.bind(this);
+    this.filterGender = this.filterGender.bind(this);
+  }
+
   componentDidMount() {
     this.props.getData();
   }
 
   render() {
+
     if (this.props.loading) {
       return (
         <div className="container text-center default-padding">Loading...</div>
       );
     }
+
+    const natList = ['AU', 'BR', 'CA', 'CH', 'DE', 'DK', 'ES', 'FI', 'FR', 'GB', 'IE', 'IR', 'NL', 'NZ', 'TR', 'US'];
+
     return (
       <div className="App">
         <header className="container default-padding">
@@ -29,11 +41,9 @@ class App extends Component {
                       type="text"
                       placeholder="Search"
                       className="searchfield form-control text-center"
+                      onKeyUp={this.filterName}
                     />
                   </div>
-                </div>
-                <div className="col-2">
-                  <button className="btn btn-primary">Search</button>
                 </div>
               </div>
             </div>
@@ -43,15 +53,15 @@ class App extends Component {
           <div className="row">
             <div className="col-4 offset-2 dropdown">
               <select className="form-control form-control-sm">
-                <option>Option 01</option>
-                <option>Option 02</option>
+                <option onChange={this.filterGender}>Female</option>
+                <option onChange={this.filterGender}>Male</option>
               </select>
             </div>
             <div className="col-4 dropdown">
               <select className="form-control form-control-sm">
-                <option>Option 01</option>
-                <option>Option 02</option>
-                <option>Option 03</option>
+                {natList.map(( nat, index )=>{
+                  return (<option key={index} onChange={this.filterNat}>{nat}</option>)
+                })}
               </select>
             </div>
           </div>
@@ -76,8 +86,8 @@ class App extends Component {
             {this.props.data.map((item, index) => {
               return (
                 <div className="article" key={index}>
-                  <h4>Article Title (#{item})</h4>
-                  <p>Article Description</p>
+                  <h4>{item.name.first} {item.name.last}</h4>
+                  <p>{item.gender}, {item.nat}</p>
                 </div>
               );
             })}
@@ -87,6 +97,24 @@ class App extends Component {
       </div>
     );
   }
+
+  filterName(e){
+      const searchTerm = e.target.value || '';
+      if(searchTerm.length > 2){
+        this.props.filterBySearchTerm(searchTerm);
+      }
+  }
+
+  filterNat(e) {
+    const nat = e.target.value || '';
+    this.props.filterByNat(nat);
+  }
+
+  filterGender(e) {
+    const gender = e.target.value || '';
+    this.props.filterByGender(gender);
+  }
+
 }
 
 const mapStateToProps = state => ({

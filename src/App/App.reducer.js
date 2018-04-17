@@ -1,6 +1,6 @@
 import { filterAndSearch } from './helpers/filterAndSearch';
 
-import { DATA_AVAILABLE, FILTER_TERM, FILTER_NAT, FILTER_GENDER, RESET_STATE } from './App.actions';
+import { DATA_AVAILABLE, FILTER_TERM, FILTER_NAT, FILTER_GENDER, RESET_STATE, RESET_NAT, RESET_GENDER } from './App.actions';
 
 
 const initialState = {
@@ -56,6 +56,22 @@ export default (state = initialState, action) => {
         searchTerm: '',
         gender: '',
         nat: ''
+      };
+
+    case RESET_NAT:
+      return {
+        ...state,
+        loading: false,
+        data: filterAndSearch(state.backupedData, state.searchTerm, '', state.gender),
+        nat: '',
+      };
+
+    case RESET_GENDER:
+      return {
+        ...state,
+        loading: false,
+        data: filterAndSearch(state.backupedData, state.searchTerm, state.nat, ''),
+        gender: '',
       };
 
     default:

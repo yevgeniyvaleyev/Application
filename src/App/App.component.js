@@ -56,15 +56,20 @@ class App extends Component {
           {/* Filters  */}
           <div className="row">
             <div className="col-4 offset-2 dropdown">
-              <select className="form-control form-control-sm" onChange={this.filterGender}>
+              <select className="form-control form-control-sm" onChange={this.filterGender} ref={(select) => this.genderSelect = select}>
+                <option value="">Select Gender</option>
                 <option>Female</option>
                 <option>Male</option>
               </select>
             </div>
             <div className="col-4 dropdown">
-              <select className="form-control form-control-sm" onChange={this.filterNat}>
+              <select className="form-control form-control-sm" onChange={this.filterNat} ref={(select) => this.natSelect = select}>
                 {natList.map(( nat, index )=>{
-                  return (<option key={index}>{nat}</option>)
+                  if (index === 0){
+                    return (<option key={index} value="">Select Nationality</option>)
+                  } else {
+                    return (<option key={index}>{nat}</option>)
+                  }
                 })}
               </select>
             </div>
@@ -73,12 +78,22 @@ class App extends Component {
           {/* Facetted filters  */}
           <div className="row">
             <div className="col-8 offset-2 text-center default-padding">
-              {/* One Pill  */}
-              <span className="badge badge-pill badge-secondary small-padding-wide">
-                <span className="text">Option 01</span>
-                <span className="icon-margin-left cursor-pointer">&times;</span>
-              </span>
-              {/* One Pill  */}
+
+              {/* Pills  */}
+              { this.props.pills.nat && 
+                <span className="badge badge-pill badge-secondary small-padding-wide">
+                <span className="text"> {this.props.pills.nat} </span>
+                  <span onClick={() => this.resetFields('nat')} className="icon-margin-left cursor-pointer">&times;</span>
+                </span>
+              }
+              {this.props.pills.gender &&
+                <span className="badge badge-pill badge-secondary small-padding-wide">
+                <span className="text"> {this.props.pills.gender} </span>
+                  <span onClick={() => this.resetFields('gender')} className="icon-margin-left cursor-pointer">&times;</span>
+                </span>
+              }
+              {/* Pills  */}
+
             </div>
           </div>
         </header>
@@ -86,6 +101,7 @@ class App extends Component {
         {/* Main / Searchresults  */}
         <main className="main default-padding">
           <div className="container">
+
             {/* Map over articles  */}
             {this.props.data.map((item, index) => {
               return (
@@ -96,6 +112,7 @@ class App extends Component {
               );
             })}
             {/* Map over articles  */}
+
           </div>
         </main>
       </div>
@@ -103,7 +120,6 @@ class App extends Component {
   }
 
   filterName(e){
-    console.log(e.target.value);
       const searchTerm = e.target.value || '';
       if(searchTerm.length > 2){
         this.props.filterBySearchTerm(searchTerm);
@@ -122,8 +138,18 @@ class App extends Component {
     this.props.filterByGender(gender);
   }
 
-  resetFields(){
-    this.props.resetState();
+  resetFields(type){
+    switch(type){
+      case 'nat':
+        this.props.resetNat();
+        this.natSelect.selectedIndex = 0;
+        break;
+      case 'gender':
+        this.props.resetGender();
+        this.genderSelect.selectedIndex = 0;
+        break;
+      default: this.props.resetState();
+    }
   }
 
 }
@@ -131,7 +157,8 @@ class App extends Component {
 
 const mapStateToProps = state => ({
   loading: state.AppReducer.loading,
-  data: state.AppReducer.data
+  data: state.AppReducer.data,
+  pills: { nat: state.AppReducer.nat, gender: state.AppReducer.gender }
 });
 
 function mapDispatchToProps(dispatch) {

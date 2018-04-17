@@ -4,6 +4,14 @@ import { connect } from 'react-redux';
 import * as Actions from './App.actions'; //Import your actions
 import './App.style.css';
 
+// Components
+import SearchField from './components/SearchField';
+import GenderSelect from './components/GenderSelect';
+import NatSelect from './components/NatSelect';
+import Pill from './components/Pill';
+import Article from './components/Article';
+
+
 class App extends Component {
   constructor(props){
     super(props);
@@ -12,6 +20,8 @@ class App extends Component {
     this.filterNat = this.filterNat.bind(this);
     this.filterGender = this.filterGender.bind(this);
     this.resetFields = this.resetFields.bind(this);
+    this.handleGenderRef = this.handleGenderRef.bind(this);
+    this.handleNatRef = this.handleNatRef.bind(this);
   }
 
   componentDidMount() {
@@ -26,8 +36,7 @@ class App extends Component {
       );
     }
 
-    const natList = ['AU', 'BR', 'CA', 'CH', 'DE', 'DK', 'ES', 'FI', 'FR', 'GB', 'IE', 'IR', 'NL', 'NZ', 'TR', 'US'];
-
+    
     return (
       <div className="App">
         <header className="container default-padding">
@@ -36,43 +45,14 @@ class App extends Component {
           <div className="row">
             <div className="col-8 offset-2 text-center">
               <h4>Application</h4>
-
-              <div className="row">
-                <div className="col-8 offset-2">
-                  <div className="form-group">
-                    <input
-                      type="text"
-                      placeholder="Search"
-                      className="searchfield form-control text-center"
-                      onKeyUp={this.filterName}
-                    />
-                  </div>
-                </div>
-              </div>
-
+              <SearchField onClickFilterByName={this.filterName} />
             </div>
           </div>
 
           {/* Filters  */}
           <div className="row">
-            <div className="col-4 offset-2 dropdown">
-              <select className="form-control form-control-sm" onChange={this.filterGender} ref={(select) => this.genderSelect = select}>
-                <option value="">Select Gender</option>
-                <option>Female</option>
-                <option>Male</option>
-              </select>
-            </div>
-            <div className="col-4 dropdown">
-              <select className="form-control form-control-sm" onChange={this.filterNat} ref={(select) => this.natSelect = select}>
-                {natList.map(( nat, index )=>{
-                  if (index === 0){
-                    return (<option key={index} value="">Select Nationality</option>)
-                  } else {
-                    return (<option key={index}>{nat}</option>)
-                  }
-                })}
-              </select>
-            </div>
+            <GenderSelect onChangeFilterGender={this.filterGender} handleRef={this.handleGenderRef} />
+            <NatSelect onChangeFilterNat={this.filterNat} handleRef={this.handleNatRef} />
           </div>
 
           {/* Facetted filters  */}
@@ -80,18 +60,8 @@ class App extends Component {
             <div className="col-8 offset-2 text-center default-padding">
 
               {/* Pills  */}
-              { this.props.pills.nat && 
-                <span className="badge badge-pill badge-secondary small-padding-wide">
-                <span className="text"> {this.props.pills.nat} </span>
-                  <span onClick={() => this.resetFields('nat')} className="icon-margin-left cursor-pointer">&times;</span>
-                </span>
-              }
-              {this.props.pills.gender &&
-                <span className="badge badge-pill badge-secondary small-padding-wide">
-                <span className="text"> {this.props.pills.gender} </span>
-                  <span onClick={() => this.resetFields('gender')} className="icon-margin-left cursor-pointer">&times;</span>
-                </span>
-              }
+              {this.props.pills.nat && <Pill field={this.props.pills.nat} onClickReset={() => this.resetFields('nat')} /> }
+              {this.props.pills.gender && <Pill field={this.props.pills.gender} onClickReset={() => this.resetFields('gender')} />}
               {/* Pills  */}
 
             </div>
@@ -105,10 +75,7 @@ class App extends Component {
             {/* Map over articles  */}
             {this.props.data.map((item, index) => {
               return (
-                <div className="article" key={index}>
-                  <h4>{item.name.first} {item.name.last}</h4>
-                  <p>{item.gender}, {item.nat}</p>
-                </div>
+                <Article key={index} firstName={item.name.first} lastName={item.name.last} nat={item.nat} gender={item.gender} />
               );
             })}
             {/* Map over articles  */}
@@ -150,6 +117,14 @@ class App extends Component {
         break;
       default: this.props.resetState();
     }
+  }
+
+  handleNatRef(reference) {
+    this.natSelect = reference;
+  }
+
+  handleGenderRef(reference) {
+    this.genderSelect = reference;
   }
 
 }

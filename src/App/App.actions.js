@@ -40,3 +40,11 @@ export function filterByGender(gender) {
         dispatch({ type: FILTER_GENDER, gender })
     };
 }
+
+export const RESET_STATE = 'RESET_STATE';
+
+export function resetState() {
+    return dispatch => {
+        dispatch({ type: RESET_STATE })
+    };
+}

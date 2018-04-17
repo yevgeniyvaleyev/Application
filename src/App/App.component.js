@@ -11,6 +11,7 @@ class App extends Component {
     this.filterName = this.filterName.bind(this);
     this.filterNat = this.filterNat.bind(this);
     this.filterGender = this.filterGender.bind(this);
+    this.resetFields = this.resetFields.bind(this);
   }
 
   componentDidMount() {
@@ -30,10 +31,12 @@ class App extends Component {
     return (
       <div className="App">
         <header className="container default-padding">
+
           {/* Title & Searchbox  */}
           <div className="row">
             <div className="col-8 offset-2 text-center">
               <h4>Application</h4>
+
               <div className="row">
                 <div className="col-8 offset-2">
                   <div className="form-group">
@@ -46,21 +49,22 @@ class App extends Component {
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
 
           {/* Filters  */}
           <div className="row">
             <div className="col-4 offset-2 dropdown">
-              <select className="form-control form-control-sm">
-                <option onChange={this.filterGender}>Female</option>
-                <option onChange={this.filterGender}>Male</option>
+              <select className="form-control form-control-sm" onChange={this.filterGender}>
+                <option>Female</option>
+                <option>Male</option>
               </select>
             </div>
             <div className="col-4 dropdown">
-              <select className="form-control form-control-sm">
+              <select className="form-control form-control-sm" onChange={this.filterNat}>
                 {natList.map(( nat, index )=>{
-                  return (<option key={index} onChange={this.filterNat}>{nat}</option>)
+                  return (<option key={index}>{nat}</option>)
                 })}
               </select>
             </div>
@@ -99,9 +103,12 @@ class App extends Component {
   }
 
   filterName(e){
+    console.log(e.target.value);
       const searchTerm = e.target.value || '';
       if(searchTerm.length > 2){
         this.props.filterBySearchTerm(searchTerm);
+      } else {
+        this.resetFields();
       }
   }
 
@@ -115,7 +122,12 @@ class App extends Component {
     this.props.filterByGender(gender);
   }
 
+  resetFields(){
+    this.props.resetState();
+  }
+
 }
+
 
 const mapStateToProps = state => ({
   loading: state.AppReducer.loading,

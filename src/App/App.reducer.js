@@ -1,4 +1,7 @@
-import { DATA_AVAILABLE, FILTER_TERM, FILTER_NAT, FILTER_GENDER } from './App.actions';
+import { filterAndSearch } from './helpers/filterAndSearch';
+
+import { DATA_AVAILABLE, FILTER_TERM, FILTER_NAT, FILTER_GENDER, RESET_STATE } from './App.actions';
+
 
 const initialState = {
   loading: true,
@@ -9,31 +12,10 @@ const initialState = {
   nat: ''
 };
 
+
 export default (state = initialState, action) => {
 
-  const filterAndSearch = (data, searchTerm, nat, gender) => {
-
-    let returnedList = data.filter((user) => {
-      return user.name.first.indexOf(searchTerm) > -1;
-    });
-
-    if (nat) {
-      returnedList = returnedList.filter((user) => {
-        return user.nat === nat;
-      });
-    }
-
-    if (gender) {
-      returnedList = returnedList.filter((user) => {
-        return user.gender === gender;
-      });
-    }
-
-    return returnedList;
-  };
-
   switch (action.type) {
-
     case DATA_AVAILABLE:
       return {
         ...state,
@@ -46,9 +28,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        data: state.backupedData.filter((user)=>{
-          return user.name.first.indexOf(action.searchTerm) > -1
-        }),
+        data: filterAndSearch(state.backupedData, action.searchTerm, state.nat, state.gender),
         searchTerm: action.searchTerm
       };
 
@@ -66,6 +46,16 @@ export default (state = initialState, action) => {
         loading: false,
         data: filterAndSearch(state.backupedData, state.searchTerm, state.nat, action.gender),
         gender: action.gender
+      };
+
+    case RESET_STATE:
+      return {
+        ...state,
+        loading: false,
+        data: state.backupedData,
+        searchTerm: '',
+        gender: '',
+        nat: ''
       };
 
     default:

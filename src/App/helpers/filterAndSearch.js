@@ -1,27 +1,10 @@
+const searchFilter = (user, searchTerm) => `${user.name.first} ${user.name.last}`.includes(searchTerm);
+const natFilter = (user, nat) => user.nat.toLowerCase() === nat.toLowerCase();
+const genderFilter = (user, gender) => user.gender.toLowerCase() === gender.toLowerCase();
+
 export const filterAndSearch = (data, searchTerm, nat, gender) => {
-    let returnedList = data;
-
-    if (searchTerm) {
-        returnedList = data.filter((user) => {
-            let firstNameTerm = searchTerm.split(" ")[0];
-            let lastNameTerm = searchTerm.split(" ")[1];
-            let isFirstName = firstNameTerm && user.name.first.toLowerCase().indexOf(firstNameTerm.toLowerCase()) > -1;
-            let isLastName = lastNameTerm && user.name.last.toLowerCase().indexOf(lastNameTerm.toLowerCase()) > -1;
-            return (isFirstName || isLastName);
-        });
-    }
-
-    if (nat) {
-        returnedList = returnedList.filter((user) => {
-            return user.nat.toLowerCase() === nat.toLowerCase();
-        });
-    }
-
-    if (gender) {
-        returnedList = returnedList.filter((user) => {
-            return user.gender.toLowerCase() === gender.toLowerCase();
-        });
-    }
-
-    return returnedList;
+    return data
+        .filter(user => (searchTerm ? searchFilter(user, searchTerm) : true))
+        .filter(user => (nat ? natFilter(user, nat) : true))
+        .filter(user => (gender ? genderFilter(user, gender) : true));
 };

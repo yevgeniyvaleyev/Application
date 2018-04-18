@@ -11,9 +11,8 @@ import NatSelect from './components/NatSelect';
 import Pill from './components/Pill';
 import Article from './components/Article';
 
-
 class App extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.filterName = this.filterName.bind(this);
@@ -29,18 +28,13 @@ class App extends Component {
   }
 
   render() {
-
     if (this.props.loading) {
-      return (
-        <div className="container text-center default-padding">Loading...</div>
-      );
+      return <div className="container text-center default-padding">Loading...</div>;
     }
 
-    
     return (
       <div className="App">
         <header className="container default-padding">
-
           {/* Title & Searchbox  */}
           <div className="row">
             <div className="col-8 offset-2 text-center">
@@ -58,12 +52,10 @@ class App extends Component {
           {/* Facetted filters  */}
           <div className="row">
             <div className="col-8 offset-2 text-center default-padding">
-
               {/* Pills  */}
-              {this.props.pills.nat && <Pill field={this.props.pills.nat} onClickReset={() => this.resetFields('nat')} /> }
+              {this.props.pills.nat && <Pill field={this.props.pills.nat} onClickReset={() => this.resetFields('nat')} />}
               {this.props.pills.gender && <Pill field={this.props.pills.gender} onClickReset={() => this.resetFields('gender')} />}
               {/* Pills  */}
-
             </div>
           </div>
         </header>
@@ -71,28 +63,20 @@ class App extends Component {
         {/* Main / Searchresults  */}
         <main className="main default-padding">
           <div className="container">
-
             {/* Map over articles  */}
             {this.props.data.map((item, index) => {
-              return (
-                <Article key={index} firstName={item.name.first} lastName={item.name.last} nat={item.nat} gender={item.gender} />
-              );
+              return <Article key={index} firstName={item.name.first} lastName={item.name.last} nat={item.nat} gender={item.gender} />;
             })}
             {/* Map over articles  */}
-
           </div>
         </main>
       </div>
     );
   }
 
-  filterName(e){
-      const searchTerm = e.target.value || '';
-      if(searchTerm.length > 2){
-        this.props.filterBySearchTerm(searchTerm);
-      } else {
-        this.resetFields();
-      }
+  filterName(e) {
+    const searchTerm = e.target.value || '';
+    this.props.filterBySearchTerm(searchTerm);
   }
 
   filterNat(e) {
@@ -105,8 +89,8 @@ class App extends Component {
     this.props.filterByGender(gender);
   }
 
-  resetFields(type){
-    switch(type){
+  resetFields(type) {
+    switch (type) {
       case 'nat':
         this.props.resetNat();
         this.natSelect.selectedIndex = 0;
@@ -115,7 +99,8 @@ class App extends Component {
         this.props.resetGender();
         this.genderSelect.selectedIndex = 0;
         break;
-      default: this.props.resetState();
+      default:
+        this.props.resetState();
     }
   }
 
@@ -126,9 +111,7 @@ class App extends Component {
   handleGenderRef(reference) {
     this.genderSelect = reference;
   }
-
 }
-
 
 const mapStateToProps = state => ({
   loading: state.AppReducer.loading,

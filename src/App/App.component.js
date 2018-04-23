@@ -91,14 +91,16 @@ class App extends Component {
         <main className="main default-padding">
           <div className="container">
             {/* Map over articles  */}
-            {this.props.items.map((item, index) => {
-              return (
-                <div className="article" key={index}>
-                  <h4>{item.name.first} {item.name.last}</h4>
-                  <p>{item.gender} {item.nat}</p>
-                </div>
-              );
-            })}
+            {this.props.items.length 
+              ? this.props.items.map((item, index) => {
+                  return (
+                    <div className="article" key={index}>
+                      <h4>{item.name.first} {item.name.last}</h4>
+                      <p>{item.gender} {item.nat}</p>
+                    </div>
+                  );
+                }) 
+              : <div>Empty list</div>}
             {/* Map over articles  */}
           </div>
         </main>

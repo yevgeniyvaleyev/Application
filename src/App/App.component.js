@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as Actions from './App.actions'; //Import your actions
+import * as filter from './reducers/filter';
+import { getData, filterByGender, filterByNationality, filterByName } from './actions'; //Import your actions
 import './App.style.css';
 
 class App extends Component {
   componentDidMount() {
     this.props.getData();
+  }
+
+  handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      this.props.filterByName(event.target.value.trim())
+    }
   }
 
   render() {
@@ -27,13 +33,17 @@ class App extends Component {
                   <div className="form-group">
                     <input
                       type="text"
+                      ref={(input) => { this.searchInput = input; }}
+                      onKeyPress={this.handleKeyPress}
                       placeholder="Search"
                       className="searchfield form-control text-center"
                     />
                   </div>
                 </div>
                 <div className="col-2">
-                  <button className="btn btn-primary">Search</button>
+                  <button 
+                    onClick={() => this.props.filterByName(this.searchInput.value.trim())}
+                    className="btn btn-primary">Search</button>
                 </div>
               </div>
             </div>
@@ -42,16 +52,24 @@ class App extends Component {
           {/* Filters  */}
           <div className="row">
             <div className="col-4 offset-2 dropdown">
-              <select className="form-control form-control-sm">
-                <option>Option 01</option>
-                <option>Option 02</option>
+              <select 
+                className="form-control form-control-sm"
+                onChange={(event) => this.props.filterByGender(event.target.value)}
+                >
+                <option value="">none</option>
+                <option value="male">male</option>
+                <option value="female">female</option>
               </select>
             </div>
             <div className="col-4 dropdown">
-              <select className="form-control form-control-sm">
-                <option>Option 01</option>
-                <option>Option 02</option>
-                <option>Option 03</option>
+              <select 
+                value={this.props.filter.nationality}
+                className="form-control form-control-sm"
+                onChange={(event) => this.props.filterByNationality(event.target.value)}>
+                <option value="">none</option>
+                <option value="DE">DE</option>
+                <option value="NL">NL</option>
+                <option value="GB">GB</option>
               </select>
             </div>
           </div>
@@ -73,11 +91,11 @@ class App extends Component {
         <main className="main default-padding">
           <div className="container">
             {/* Map over articles  */}
-            {this.props.data.map((item, index) => {
+            {this.props.items.map((item, index) => {
               return (
                 <div className="article" key={index}>
-                  <h4>Article Title (#{item})</h4>
-                  <p>Article Description</p>
+                  <h4>{item.name.first} {item.name.last}</h4>
+                  <p>{item.gender} {item.nat}</p>
                 </div>
               );
             })}
@@ -89,13 +107,17 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  loading: state.AppReducer.loading,
-  data: state.AppReducer.data
+const mapStateToProps = (state) => ({
+  loading: state.loading,
+  filter: state.filter,
+  items: filter.hasFiltering(state) ? filter.getItems(state) : state.items
 });
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(Actions, dispatch);
+const mapDispatchToProps = {
+  getData,
+  filterByNationality,
+  filterByName,
+  filterByGender
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

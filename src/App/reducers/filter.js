@@ -14,7 +14,7 @@ const getFilterReducer = (type, defaultState = '') => (state = defaultState, act
 
 export default combineReducers({
   gender: getFilterReducer(FILTER_ITEMS_BY_GENDER),
-  name: getFilterReducer(FILTER_ITEMS_BY_NAME),
+  name: getFilterReducer(FILTER_ITEMS_BY_NAME, 'oa'),
   nationality: getFilterReducer(FILTER_ITEMS_BY_NATIONALITY, 'DE'), // just for demonstration
 });
 

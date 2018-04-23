@@ -5,14 +5,27 @@ import { getData, filterByGender, filterByNationality, filterByName } from './ac
 import './App.style.css';
 
 class App extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      name: props.filter.name
+    };
+  }
+
   componentDidMount() {
     this.props.getData();
   }
 
-  handleKeyPress = (event) => {
+  onEnter = (event) => {
     if (event.key === 'Enter') {
       this.props.filterByName(event.target.value.trim())
     }
+  }
+
+  onNameChange = (event) => {
+    this.setState({name: event.target.value.trim()});
   }
 
   render() {
@@ -32,9 +45,10 @@ class App extends Component {
                 <div className="col-8 offset-2">
                   <div className="form-group">
                     <input
+                      value={this.state.name}
                       type="text"
-                      ref={(input) => { this.searchInput = input; }}
-                      onKeyPress={this.handleKeyPress}
+                      onChange={this.onNameChange}
+                      onKeyPress={this.onEnter}
                       placeholder="Search"
                       className="searchfield form-control text-center"
                     />
@@ -42,7 +56,7 @@ class App extends Component {
                 </div>
                 <div className="col-2">
                   <button 
-                    onClick={() => this.props.filterByName(this.searchInput.value.trim())}
+                    onClick={() => this.props.filterByName(this.state.name)}
                     className="btn btn-primary">Search</button>
                 </div>
               </div>
@@ -53,6 +67,7 @@ class App extends Component {
           <div className="row">
             <div className="col-4 offset-2 dropdown">
               <select 
+                value={this.props.filter.gender}
                 className="form-control form-control-sm"
                 onChange={(event) => this.props.filterByGender(event.target.value)}
                 >
